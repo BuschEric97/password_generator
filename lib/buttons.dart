@@ -1,3 +1,8 @@
+/*
+This file contains the button widgets that
+toggle the options for the password generation
+ */
+
 import 'package:flutter/material.dart';
 
 // This widget is the button to control whether or not

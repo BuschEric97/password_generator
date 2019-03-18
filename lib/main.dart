@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'buttons.dart';
 import 'generate_password.dart';
+import 'actions.dart';
+import 'password_box.dart';
 
 void main() => runApp(MyApp());
 
@@ -31,11 +33,11 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Text('Password Generator'),
       ),
       body: Column(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
-          buttonSection(),
-          // TODO - create a section for the password length toggle and generate password button
-          // TODO - create a section to display the generated password
+          ButtonSection(),
+          ActionSection(),
+          PasswordSection(),
         ],
       ),
     );
@@ -44,11 +46,11 @@ class _MyHomePageState extends State<MyHomePage> {
 
 // This widget contains the buttons that
 // toggle options for the password generator
-class buttonSection extends StatefulWidget {
+class ButtonSection extends StatefulWidget {
   @override
   _ButtonSectionState createState() => _ButtonSectionState();
 }
-class _ButtonSectionState extends State<buttonSection> {
+class _ButtonSectionState extends State<ButtonSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -60,6 +62,46 @@ class _ButtonSectionState extends State<buttonSection> {
               CapitalWidget(),
             ]
         )
+    );
+  }
+}
+
+// This widget contains the dial for the number of words
+// in the password and the "generate password" button
+class ActionSection extends StatefulWidget {
+  @override
+  _ActionSectionState createState() => _ActionSectionState();
+}
+class _ActionSectionState extends State<ActionSection> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          // TODO - create a widget for the number dial for the number of words in the password
+          // TODO - create a widget for the generate password button
+        ]
+      )
+    );
+  }
+}
+
+class PasswordSection extends StatefulWidget {
+  @override
+  _PasswordSectionState createState() => _PasswordSectionState();
+}
+class _PasswordSectionState extends State<PasswordSection> {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          // TODO - create a widget for the text box that contains the generated password
+          // TODO - create a widget for the icon to copy the generated password to the clipboard
+        ]
+      )
     );
   }
 }
