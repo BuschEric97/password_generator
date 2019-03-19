@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
-import 'buttons.dart';
 import 'generate_password.dart';
 import 'actions.dart';
 import 'password_box.dart';
+
+// These are the settings which are toggled in ButtonSection()
+bool _digit = false;
+bool _hyphen = false;
+bool _capital = false;
 
 void main() => runApp(MyApp());
 
@@ -54,12 +58,24 @@ class _ButtonSectionState extends State<ButtonSection> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        child: Row(
+        child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              DigitWidget(),
-              HyphenWidget(),
-              CapitalWidget(),
+              SwitchListTile(
+                title: const Text('ADD TRAILING DIGIT'),
+                value: _digit,
+                onChanged: (bool value) { setState(() { _digit = value; }); },
+              ),
+              SwitchListTile(
+                  title: const Text('ADD RANDOM HYPHEN'),
+                  value: _hyphen,
+                  onChanged: (bool value) { setState(() { _hyphen = value; }); },
+              ),
+              SwitchListTile(
+                  title: const Text('ADD RANDOM CAPITALIZATION'),
+                  value: _capital,
+                  onChanged: (bool value) { setState(() { _capital = value; }); },
+              ),
             ]
         )
     );
