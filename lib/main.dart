@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
+import 'package:flutter/services.dart' show rootBundle;
+import 'dart:math';
 
 // These are the settings which are toggled by the buttons in the app
 bool _digit = false;
@@ -121,8 +124,10 @@ class _PasswordSectionState extends State<PasswordSection> {
     );
   }
 
-  void GeneratePassword () {
+  void GeneratePassword () async {
     String _newPassword;
+    Random rnd = new Random();
+    int hyphenIndex = rnd.nextInt(_numWords - 1);
 
     if (_numWords <= 0) {
       Scaffold.of(context).showSnackBar(
@@ -132,11 +137,80 @@ class _PasswordSectionState extends State<PasswordSection> {
         )
       );
     } else {
-      _newPassword  = 'password' + _digit.toString() + _hyphen.toString() + _capital.toString() + _numWords.toString();
+      _newPassword = await GetRandomString(); // put an initial word in the password
+
+      // put additional words into the password if necessary
+      for (int i = 0; i < _numWords; i++) {
+        _newPassword =  _newPassword + await GetRandomString();
+        if (_hyphen && i == hyphenIndex) // add a hyphen at hyphenIndex if option was selected
+          _newPassword = _newPassword + '-';
+        else if (i != _numWords - 1) // else add an underscore
+          _newPassword = _newPassword + '_';
+      }
+
+      // add a random digit at the end of the password if the option was selected
+      if (_digit)
+        _newPassword = _newPassword + '_' + rnd.nextInt(9).toString();
+
+      // capitalize a random letter (if applicable) if the option was selected
+      if (_capital)
+        _newPassword = RandomCapital(_newPassword);
 
       setState(() {
         _password = _password.copyWith(text: _newPassword.toString()); // update password text box with new password
       });
     }
+  }
+
+  // Uses the file "Wordlist.txt" in assets
+  // to find and return the next random string
+  Future<String> GetRandomString () async {
+    // generate the random number used
+    // to get the next random word
+    Random rnd = new Random();
+    int fileIndex = rnd.nextInt(7775);
+
+    // get the next random word
+    String fileText = await rootBundle.loadString('assets/Wordlist.txt');
+    List<String> wordList = fileText.split("\n");
+    List<String> wordListLine = wordList[fileIndex].split("\t");
+    String randWord = wordListLine[1];
+
+    // return the next random word
+    return randWord;
+  }
+
+  // randomly capitalize one of the letters in the given string
+  // and return the new string. If there are no letters in the
+  // string, return the string unmodified.
+  String RandomCapital (String str) {
+    String newStr;
+    Random rnd = new Random();
+
+    // if the input string does not contain any
+    // letters, then return it unmodified
+    if (!str.contains(new RegExp(r'[a-z]')))
+      return str;
+
+    // randomly capitalize one of the letters in the string
+    while (true) {
+      int randomChar = rnd.nextInt(str.length-1);
+
+      // capitalize the letter at index randomChar
+      if (randomChar == str.length-1) {
+        newStr = str.substring(0, randomChar) + str.substring(randomChar);
+      } else {
+        newStr = str.substring(0, randomChar)
+            + str.substring(randomChar, randomChar + 1).toUpperCase()
+            + str.substring(randomChar + 1);
+      }
+
+      // if the character at index randomChar was in
+      // fact a letter, then break out of the loop
+      if (str.substring(randomChar, randomChar + 1).contains(new RegExp(r'[a-z]')))
+        break;
+    }
+
+    return newStr;
   }
 }
